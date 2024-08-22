@@ -1,8 +1,9 @@
 
 function NavBar() {
   return (
-    <nav className="h-16 bg-black">
-    </nav>
+    <div className="navbar p-5 w-full bg-black">
+      <h3>Hello world</h3>
+    </div>
   );
 }
 

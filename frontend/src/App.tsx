@@ -5,11 +5,9 @@ import NavBar from './components/NavBar'
 function App() {
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-[100vh] flex flex-col">
       <NavBar/>
-      <div className="p-5 flex-grow">
-        <Home />
-      </div>
+      <Home />
     </div>
   )
 }
