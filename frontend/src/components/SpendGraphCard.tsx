@@ -70,15 +70,21 @@ function SpendGraphCard(){
           }
       ]
     function renderTooltip(props: any){
-        console.log(props);
+
         if (props.payload.length !== 0){
             let name: string = props.payload[0].payload["name"];
             let amount: number = props.payload[0].payload["pv"];
-            if (name === ""){
-                setMonth({name: "", amount: ""});
-            }else{
-                setMonth({name: name + " Spend", amount: `${amount}`});
-            }
+            // if (name === ""){
+            //     setMonth({name: "", amount: ""});
+            // }else{
+            //     setMonth({name: name + " Spend", amount: `${amount}`});
+            // }
+            return (
+                <div className="bg-white p-2 rounded-lg shadow-md">
+                    <p>{month.name}</p>
+                    <p>{month.amount}</p>
+                </div>
+            );
         };
         return null;
     }
@@ -101,7 +107,7 @@ function SpendGraphCard(){
                     </defs>
                     <XAxis dataKey="name" type="category"/>
                     <YAxis hide={true}/>
-                    <Tooltip key={"Spend"} content={renderTooltip}/>
+                    <Tooltip key={"Spend"}/>
                     <Area type="monotone" dataKey="pv" stroke="#82ca9d" fillOpacity={1} fill="url(#colorPv)" />
                 </AreaChart>
             </ResponsiveContainer>
