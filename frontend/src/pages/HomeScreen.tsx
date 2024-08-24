@@ -1,11 +1,13 @@
-import BillsTableCard from "./BillsTableCard";
-import MetricsCard from "./MetricsCard";
-import SpendDistributionCard from "./SpendDistributionCard";
-import SpendGraphCard from "./SpendGraphCard";
+import BillsTableCard from "../components/HomeGridComponents/BillsTableCard";
+import MetricsCard from "../components/HomeGridComponents/MetricsCard";
+import SpendDistributionCard from "../components/HomeGridComponents/SpendDistributionCard";
+import SpendGraphCard from "../components/HomeGridComponents/SpendGraphCard";
+import NavBar from "../components/HomeGridComponents/NavBar";
 
-function Home(){
+function HomeScreen(){
     return (
-        <>
+        <div  className="flex flex-col py-2 px-3 gap-2 size-full">
+            <NavBar/>
             <div id="grid" className="grid grid-rows-[1fr_2fr_3fr] grid-cols-2 bg-slate-50 h-full gap-2.5 overflow-auto">
                 <div id="metrics-card" className="bg-slate-200 shadow-lg rounded-lg" >
                     <MetricsCard currSpend={100} avgSpend={200}/>
@@ -21,9 +23,9 @@ function Home(){
                     <BillsTableCard/>
                 </div>
             </div>
-        </>
+        </div>
         
     );
 };
 
-export default Home;
+export default HomeScreen;

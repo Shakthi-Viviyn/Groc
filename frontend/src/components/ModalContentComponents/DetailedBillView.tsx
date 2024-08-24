@@ -1,8 +1,8 @@
-import { Bill } from "./types";
+import { Bill } from "../../types/types";
 
 function DetailedBillView({bill}: {bill: Bill}) {
   return (
-    <div className="size-full grid grid-rows-[1fr_3fr] grid-cols-[1fr_4fr] gap-5 pt-8">
+    <div className="size-full grid grid-rows-[1fr_3fr] grid-cols-[1fr_4fr] gap-5">
       <div className="flex flex-col justify-center items-center text-left bg-slate-300 rounded-lg shadow-lg">
         <h3 className="text-lg">Bill amount</h3>
         <p className="text-4xl">${bill.totalAmount}</p>
@@ -25,7 +25,7 @@ function DetailedBillView({bill}: {bill: Bill}) {
             </div>
         </div>
       </div>
-      <div className="flex flex-col gap-2.5 px-2 py-2 bg-slate-300 col-start-2 col-end-3 row-start-1 row-end-3 overflow-y-auto rounded-lg shadow-lg">
+      <div className="flex flex-col gap-3 p-3 bg-slate-300 col-start-2 col-end-3 row-start-1 row-end-3 overflow-y-auto rounded-lg shadow-lg">
         {bill.products.map((product) => 
                 {
                     return (

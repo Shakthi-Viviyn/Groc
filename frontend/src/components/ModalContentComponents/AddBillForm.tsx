@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { ModalContext, ModalContextType } from "../../pages/Layout";
 
 interface BillFormType {
     storeName: string;
@@ -16,6 +17,8 @@ interface ProductFormType {
 }
 
 function AddBillForm(){
+
+    const { setShowModal } = useContext(ModalContext) as ModalContextType;
 
     const [billForm, setBillForm] = useState<BillFormType>({
         storeName: "",
@@ -82,33 +85,37 @@ function AddBillForm(){
         setEditState({state: true, index})
     }
 
-    console.log(productForm)
+    function handleAddBill(){
+        // if (billForm.storeName === "" || billForm.location === "" || billForm.date === "" || billForm.products.length === 0) return
+        console.log(billForm)
+        setShowModal(false)
+    }
 
 
 
     return (
-        <div className="size-full grid grid-rows-[2.2fr_5fr] grid-cols-[1.5fr_2fr] gap-2.5 mt-7 font-mono">
+        <div className="size-full grid grid-rows-[2.2fr_5fr_0.6fr] grid-cols-[1.5fr_2fr] gap-2.5 font-mono">
 
             <div className="bg-slate-300 flex flex-col gap-3 justify-center items-center rounded-lg shadow-lg p-5">
                 <div className="flex gap-2 items-center">
                     <label className="">Store Name:</label>
-                    <input type="text" name="storeName" value={billForm.storeName} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 "/>
+                    <input type="text" name="storeName" value={billForm.storeName} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">City:</label>
-                    <input type="text" name="location" value={billForm.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 "/>
+                    <input type="text" name="location" value={billForm.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">Date:</label>
-                    <input type="date" name="date" value={billForm.date} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 "/>
+                    <input type="date" name="date" value={billForm.date} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
             </div>
 
-            <div className="bg-slate-300 flex flex-col gap-3 rounded-lg shadow-lg p-3 overflow-y-auto">
+            <div className="bg-slate-300 flex flex-col gap-3 row-start-2 row-end-4 rounded-lg shadow-lg p-3 overflow-y-auto">
                 <h3 className="text-lg">Products</h3>
                 <div className="flex flex-col gap-3 h-full">
                     {billForm.products.length > 0 ? billForm.products.map((product, index) => (
-                        <div key={index} className="flex justify-between bg-slate-200 p-3 rounded-lg cursor-pointer shadow-lg" onClick={() => handleEditProduct(product, index)}>
+                        <div key={index} className="flex justify-between bg-slate-200 p-3 rounded-lg cursor-pointer shadow-lg hover-effect" onClick={() => handleEditProduct(product, index)}>
                             <div className="flex gap-2">
                                 <h4>{product.brand}</h4>-<h4>{product.name}</h4>
                             </div>
@@ -123,20 +130,20 @@ function AddBillForm(){
             <div className="bg-slate-300 flex flex-col gap-8 justify-center items-center col-start-2 col-end-3 row-start-1 row-end-3 rounded-lg shadow-lg p-5" onKeyDown={handleKeyPress}>
                 <div className="flex gap-2">
                     <label className="">Brand:</label>
-                    <input type="text" name="brand" className="bg-slate-200 rounded-md px-2 py-1 " value={productForm.brand} onChange={handleProductInput}/>
+                    <input type="text" name="brand" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.brand} onChange={handleProductInput}/>
                 </div>
                 <div className="flex gap-2">
                     <label className="">Name:</label>
-                    <input type="text" name="name" className="bg-slate-200 rounded-md px-2 py-1 " value={productForm.name} onChange={handleProductInput}/>
+                    <input type="text" name="name" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.name} onChange={handleProductInput}/>
                 </div>
                 <div className="flex gap-2">
                     <label className="">Price:</label>
-                    <input type="number" name="price" className="bg-slate-200 rounded-md px-2 py-1 " value={productForm.price} onChange={handleProductInput}/>
+                    <input type="number" name="price" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.price} onChange={handleProductInput}/>
                 </div>
                 <div className="flex gap-2">
                     <label className="">Quantity:</label>
-                    <input type="number" name="quantity" className="bg-slate-200 rounded-md px-2 py-1 " value={productForm.quantity} onChange={handleProductInput}/>
-                    <select name="units" className="bg-slate-200 rounded-md px-2 py-1 w-20 " value={productForm.units} onChange={handleProductInput}>
+                    <input type="number" name="quantity" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.quantity} onChange={handleProductInput}/>
+                    <select name="units" className="bg-slate-200 rounded-md px-2 py-1 w-20 hover-effect" value={productForm.units} onChange={handleProductInput}>
                         <option value=""></option>
                         <option value="kg">Kg</option>
                         <option value="g">g</option>
@@ -145,8 +152,11 @@ function AddBillForm(){
                         <option value="unit">unit</option>
                     </select>
                 </div>
-                <button onClick={handleAddProduct} className="bg-slate-400 px-6 py-2 rounded-lg ">{editState.state ? "Save" : "Add" }</button>
+                <button onClick={handleAddProduct} className="bg-slate-200 px-6 py-2 rounded-lg hover:border-2 hover:border-slate-500 hover-effect">{editState.state ? "Save" : "Add" }</button>
             </div>
+            <button className="bg-slate-300 size-full flex flex-col justify-center items-center col-start-2 col-end-3 row-start-3 row-end-4 rounded-lg shadow-lg hover-effect" onClick={handleAddBill}>
+                <span>Save Bill</span>
+            </button>
         </div>
     )
 }

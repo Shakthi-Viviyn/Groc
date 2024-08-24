@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { ModalContext, ModalContextType } from "../App";
-import DetailedBillView from "./DetailedBillView";
-import { Bill } from "./types";
+import { ModalContext, ModalContextType } from "../../pages/Layout";
+import DetailedBillView from "../ModalContentComponents/DetailedBillView";
+import { Bill } from "../../types/types";
 
 
 
@@ -116,7 +116,7 @@ function BillsTableCard(){
         <div className="flex flex-col gap-3 p-5">
             {Bills.map((bill) => {
                 return (
-                    <div key={bill.id} className="flex justify-between items-center bg-slate-300 px-4 py-2 rounded-lg shadow-lg cursor-pointer" onClick={() => handleBillClick(bill)}>
+                    <div key={bill.id} className="flex justify-between items-center bg-slate-300 px-4 py-2 rounded-lg shadow-lg cursor-pointer hover-effect" onClick={() => handleBillClick(bill)}>
                         <div>
                             <h3 className="text-lg">{bill.storeName}</h3>
                             <p className="text-sm">{bill.date}</p>

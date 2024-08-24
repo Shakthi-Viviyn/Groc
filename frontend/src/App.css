@@ -1,3 +1,11 @@
 .navbar{
     height: 50px;
 }
+
+.hover-effect{
+    @apply border-2 border-transparent hover:border-slate-500 transition-all duration-[50ms];
+}
+
+.background{
+    background: linear-gradient(-45deg,#E4E5E6, #00416A);
+}
