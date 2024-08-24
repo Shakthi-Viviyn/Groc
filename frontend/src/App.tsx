@@ -17,13 +17,15 @@ function App() {
   const [modalContent, setModalContent] = useState<ReactNode>(null)
 
   return (
-    <div className="h-[100vh] flex flex-col px-3 py-2 gap-2">
-      <ModalContext.Provider value={{setShowModal, setModalContent}}>
-        <NavBar/>
-        <Home />
-        {showModal && <Modal children={modalContent}/>}
-      </ModalContext.Provider>
-    </div>
+      <div className="h-[100vh]">
+        <ModalContext.Provider value={{setShowModal, setModalContent}}>
+          <div  className="flex flex-col py-2 px-3 gap-2 size-full">
+            <NavBar/>
+            <Home />
+          </div>
+          {showModal && <Modal children={modalContent}/>}
+        </ModalContext.Provider>
+      </div>
   )
 }
 
