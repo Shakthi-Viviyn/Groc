@@ -1,4 +1,4 @@
-package com.groc.backend.service;
+package com.groc.backend.security;
 
 import com.groc.backend.model.entity.User;
 import org.springframework.security.core.GrantedAuthority;
