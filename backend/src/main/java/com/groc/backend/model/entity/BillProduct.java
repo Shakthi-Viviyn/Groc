@@ -1,5 +1,6 @@
 package com.groc.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,12 +15,14 @@ public class BillProduct {
     private String units;
     private BigDecimal price;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "bill_id")
+    @JsonIgnore
     private Bill bill;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 
     public BillProduct(BigDecimal quantity, String units, BigDecimal price, Bill bill, Product product) {
@@ -89,8 +92,8 @@ public class BillProduct {
                 ", quantity=" + quantity +
                 ", units='" + units + '\'' +
                 ", price=" + price +
-                ", bill=" + bill +
                 ", product=" + product +
+//                ", bill=" + bill +
                 '}';
     }
 }

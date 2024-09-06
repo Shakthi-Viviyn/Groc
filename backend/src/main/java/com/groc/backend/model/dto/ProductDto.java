@@ -14,6 +14,18 @@ public class ProductDto {
     private String units;
     private String category;
 
+    public static ProductDto loadBillItem(BillProduct billItem) {
+        var productDto = new ProductDto();
+        Product product = billItem.getProduct();
+        productDto.setBrand(product.getBrand());
+        productDto.setName(product.getName());
+        productDto.setPrice(billItem.getPrice());
+        productDto.setQuantity(billItem.getQuantity());
+        productDto.setUnits(billItem.getUnits());
+        productDto.setCategory(product.getCategory());
+        return productDto;
+    }
+
     public Product newProductEntity(){
         return new Product(brand, name, "Dairy");
     }

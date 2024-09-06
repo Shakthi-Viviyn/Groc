@@ -2,7 +2,6 @@ package com.groc.backend.model.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -76,7 +75,7 @@ public class Product {
                 ", brand='" + brand + '\'' +
                 ", name='" + name + '\'' +
                 ", category='" + category + '\'' +
-                ", billProducts=" + billProducts +
+//                ", billProducts=" + billProducts +
                 '}';
     }
 }

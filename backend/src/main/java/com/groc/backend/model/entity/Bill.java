@@ -1,5 +1,6 @@
 package com.groc.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ public class Bill {
     private LocalDate date;
 
     @OneToMany(mappedBy = "bill", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<BillProduct> billProducts;
 
     public Bill() {
@@ -88,6 +90,7 @@ public class Bill {
                 ", location='" + location + '\'' +
                 ", totalAmount=" + totalAmount +
                 ", date=" + date +
+                ", billProducts=" + billProducts +
                 '}';
     }
 }
