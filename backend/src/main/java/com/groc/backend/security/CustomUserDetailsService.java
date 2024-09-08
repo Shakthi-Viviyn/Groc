@@ -1,8 +1,7 @@
-package com.groc.backend.service;
+package com.groc.backend.security;
 
 import com.groc.backend.model.entity.User;
 import com.groc.backend.repository.UserRepository;
-import com.groc.backend.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

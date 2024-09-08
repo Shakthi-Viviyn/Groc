@@ -1,6 +1,5 @@
 package com.groc.backend.security;
 
-import com.groc.backend.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

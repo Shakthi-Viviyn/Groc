@@ -1,4 +1,4 @@
-package com.groc.backend.service;
+package com.groc.backend.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
