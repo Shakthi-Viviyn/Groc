@@ -1,17 +1,22 @@
 package com.groc.backend.model.dto;
 
 import com.groc.backend.model.entity.Bill;
+import com.groc.backend.model.entity.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 public class BillDto {
 
     private Long id;
     private String storeName;
     private String location;
-    private int totalAmount;
+    private double totalAmount;
     private LocalDate date;
     private List<ProductDto> products;
 
@@ -26,55 +31,8 @@ public class BillDto {
         return billDto;
     }
 
-    public Bill newBillEntity(){
-        return new Bill(storeName, location, totalAmount, date);
+    public Bill newBillEntity(User user){
+        return new Bill(storeName, location, totalAmount, date, user);
     }
 
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public List<ProductDto> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductDto> products) {
-        this.products = products;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

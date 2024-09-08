@@ -5,6 +5,8 @@ import com.groc.backend.model.entity.Bill;
 import com.groc.backend.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,30 +17,46 @@ public class BillController {
     @Autowired
     private BillService billService;
 
+    private Long getRequestUserId(){
+        return Long.valueOf((String)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    }
+
     @PostMapping("/bills")
     public ResponseEntity<String> createBill(@RequestBody BillDto bill){
-        billService.createBill(bill);
-        return ResponseEntity.status(201).body("Created");
+        Long userId = getRequestUserId();
+
+        try {
+            billService.createBill(bill, userId);
+            return ResponseEntity.status(201).body("Created");
+        }catch (UsernameNotFoundException e){
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
     }
 
     @GetMapping("/bills")
     public List<Bill> getAllBills(){
-        return billService.getAllBills();
+        Long userId = getRequestUserId();
+        return billService.getAllBills(userId);
     }
 
-    @GetMapping("/bills/{id}")
-    public ResponseEntity<?> getDetailedBill(@PathVariable Long id){
+    @GetMapping("/bills/{billId}")
+    public ResponseEntity<?> getDetailedBill(@PathVariable Long billId){
+        Long userId = getRequestUserId();
+
         try{
-            return ResponseEntity.status(200).body(billService.getDetailedBill(id));
+            BillDto billInfo = billService.getDetailedBill(billId, userId);
+            return ResponseEntity.status(200).body(billInfo);
         }catch(Exception e){
-            return ResponseEntity.status(404).body("Bill Not Found");
+            return ResponseEntity.status(404).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/bills/{id}")
-    public ResponseEntity<String> deleteBill(@PathVariable Long id){
+    @DeleteMapping("/bills/{billId}")
+    public ResponseEntity<String> deleteBill(@PathVariable Long billId){
+        Long userId = getRequestUserId();
+
         try{
-            billService.deleteBill(id);
+            billService.deleteBill(billId, userId);
             return ResponseEntity.status(200).body("Deleted");
         }catch (Exception e){
             return ResponseEntity.status(404).body("Bill not found");

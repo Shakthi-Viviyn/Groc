@@ -1,10 +1,14 @@
 package com.groc.backend.model.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Product {
 
     @Id
@@ -22,50 +26,6 @@ public class Product {
         this.brand = brand;
         this.name = name;
         this.category = category;
-    }
-
-    public Product() {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Set<BillProduct> getBillProducts() {
-        return billProducts;
-    }
-
-    public void setBillProducts(Set<BillProduct> billProducts) {
-        this.billProducts = billProducts;
     }
 
     @Override

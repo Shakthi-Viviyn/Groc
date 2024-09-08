@@ -1,29 +1,39 @@
 package com.groc.backend.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String username;
     private String password;
 
-    public String getUsername() {
-        return username;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Bill> bills;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<GrocerySpend> monthlyGrocerySpends;
 
-    public String getPassword() {
-        return password;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 }

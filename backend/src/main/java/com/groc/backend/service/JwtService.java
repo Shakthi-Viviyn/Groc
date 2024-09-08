@@ -30,10 +30,10 @@ public class JwtService {
 //        }
 //    }
 
-    public String generateToken(String username) {
+    public String generateToken(Long userId) {
 
         return Jwts.builder()
-                .subject(username)
+                .subject(userId.toString())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000*60*60*24))
                 .signWith(getKey(), Jwts.SIG.HS256)
@@ -46,8 +46,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secretBytes);
     }
 
-    public String extractUserName(String token) {
-        // extract the username from jwt token
+    public String extractSubject(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -78,8 +77,7 @@ public class JwtService {
     }
 
     public boolean validateToken(String token) {
-        final String userName = extractUserName(token);
-        if (userName == null) return false;
+        if (extractSubject(token) == null) return false;
 
         return !isTokenExpired(token);
     }

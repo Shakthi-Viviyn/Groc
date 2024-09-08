@@ -10,6 +10,6 @@ import java.util.List;
 public interface BillProductRepository extends JpaRepository<BillProduct, Long> {
 
     @Query("SELECT bp FROM BillProduct bp JOIN FETCH bp.product p WHERE bp.bill.id = :billId")
-    List<BillProduct> findBillItemsByIdDD(@Param("billId") Long billId);
+    List<BillProduct> findBillItemsById(@Param("billId") Long billId);
 
 }

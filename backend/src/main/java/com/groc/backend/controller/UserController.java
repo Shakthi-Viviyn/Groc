@@ -1,6 +1,7 @@
 package com.groc.backend.controller;
 
 import com.groc.backend.model.entity.User;
+import com.groc.backend.security.UserPrincipal;
 import com.groc.backend.service.CustomUserDetailsService;
 import com.groc.backend.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-        if (authentication.isAuthenticated()) {
-            return ResponseEntity.status(200).body(jwtService.generateToken(user.getUsername()));
+        UserPrincipal authenticatedUser = (UserPrincipal) authentication.getPrincipal();
+        if (authentication.isAuthenticated()){
+            return ResponseEntity.status(200).body(jwtService.generateToken(authenticatedUser.getId()));
         }else{
             return ResponseEntity.status(400).body("Invalid username or password");
         }
