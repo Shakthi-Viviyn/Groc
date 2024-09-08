@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class Bill {
 
     private String storeName;
     private String location;
-    private double totalAmount;
+    private BigDecimal totalAmount;
     private LocalDate date;
 
     @ManyToOne()
@@ -34,7 +35,7 @@ public class Bill {
     @JsonIgnore
     private Set<BillProduct> billProducts;
 
-    public Bill(String storeName, String location, double totalAmount, LocalDate date, User user) {
+    public Bill(String storeName, String location, BigDecimal totalAmount, LocalDate date, User user) {
         this.storeName = storeName;
         this.location = location;
         this.totalAmount = totalAmount;

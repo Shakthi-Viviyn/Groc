@@ -2,8 +2,8 @@ package com.groc.backend.controller;
 
 import com.groc.backend.model.entity.User;
 import com.groc.backend.security.UserPrincipal;
-import com.groc.backend.service.CustomUserDetailsService;
-import com.groc.backend.service.JwtService;
+import com.groc.backend.security.CustomUserDetailsService;
+import com.groc.backend.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

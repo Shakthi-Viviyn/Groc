@@ -5,6 +5,7 @@ import com.groc.backend.model.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class BillDto {
     private Long id;
     private String storeName;
     private String location;
-    private double totalAmount;
+    private BigDecimal totalAmount;
     private LocalDate date;
     private List<ProductDto> products;
 

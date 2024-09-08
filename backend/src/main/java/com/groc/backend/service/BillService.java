@@ -33,9 +33,9 @@ public class BillService {
 
     @Autowired
     private UserRepository userRepo;
-
     @Autowired
-    private SpendAnalyticsService grocerySpendService;
+    private SpendAnalyticsService spendAnalyticsService;
+
 
     public void createBill(BillDto billData, Long userId) {
 
@@ -44,15 +44,20 @@ public class BillService {
 
         Bill bill = billData.newBillEntity(user.get());
         for (ProductDto prodItr : billData.getProducts()){
-            Product product = prodItr.newProductEntity();
-            productRepo.save(product);
+            Product product;
+            if (prodItr.getId() == null){
+                product = prodItr.newProductEntity();
+                productRepo.save(product);
+            }else{
+                product = productRepo.getReferenceById(prodItr.getId());
+            }
 
             BillProduct billItem = prodItr.newBillItemEntity(bill, product);
             bill.addBillProduct(billItem);
         }
         billRepo.save(bill);
 
-        grocerySpendService.addGrocerySpend(bill, userId);
+        spendAnalyticsService.processBill(billData, userId);
     }
 
     public List<Bill> getAllBills(Long userId){

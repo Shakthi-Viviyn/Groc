@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -15,9 +17,8 @@ public class BillProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private double quantity;
-    private String units;
-    private double price;
+    private BigDecimal quantity;
+    private BigDecimal price;
 
     @ManyToOne()
     @JoinColumn(name = "bill_id")
@@ -29,9 +30,8 @@ public class BillProduct {
     @JsonIgnore
     private Product product;
 
-    public BillProduct(double quantity, String units, double price, Bill bill, Product product) {
+    public BillProduct(BigDecimal quantity, BigDecimal price, Bill bill, Product product) {
         this.quantity = quantity;
-        this.units = units;
         this.price = price;
         this.bill = bill;
         this.product = product;
@@ -42,7 +42,6 @@ public class BillProduct {
         return "BillProduct{" +
                 "id=" + id +
                 ", quantity=" + quantity +
-                ", units='" + units + '\'' +
                 ", price=" + price +
 //                ", product=" + product +
 //                ", bill=" + bill +

@@ -26,7 +26,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<GrocerySpend> monthlyGrocerySpends;
+    private Set<CategorySpend> categoricalSpends;
 
     @Override
     public String toString() {

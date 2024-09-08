@@ -2,26 +2,32 @@ package com.groc.backend.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.YearMonth;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"year", "month", "user_id"}))
-public class GrocerySpend {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"yearMonth", "user_id", "category"}))
+public class CategorySpend {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
     private YearMonth yearMonth;
-    private double spend;
+    private BigDecimal spend;
+    private String category;
 
-    public GrocerySpend(YearMonth yearMonth, double spend, User user) {
+    public CategorySpend(YearMonth yearMonth, BigDecimal spend, String category, User user) {
         this.yearMonth = yearMonth;
         this.spend = spend;
+        this.category = category;
         this.user = user;
     }
 
