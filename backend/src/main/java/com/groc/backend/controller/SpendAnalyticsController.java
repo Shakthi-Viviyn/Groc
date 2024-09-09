@@ -1,5 +1,6 @@
 package com.groc.backend.controller;
 
+import com.groc.backend.model.dto.MonthMetricsDto;
 import com.groc.backend.model.dto.SpendByMonthDto;
 import com.groc.backend.model.entity.CategorySpend;
 import com.groc.backend.service.SpendAnalyticsService;
@@ -25,6 +26,13 @@ public class SpendAnalyticsController {
     public List<SpendByMonthDto> getSpendPastYear(){
         Long userId = getRequestUserId();
         return spendAnalyticsService.getSpendLastYear(userId);
+    }
+
+    @GetMapping("/metricsCurrMonth")
+    public MonthMetricsDto getMetricsCurrMonth(){
+        System.out.println("getMetricsCurrMonth");
+        Long userId = getRequestUserId();
+        return spendAnalyticsService.getMetricsCurrMonth(userId);
     }
 
     @GetMapping("/spendByCategory")
