@@ -1,6 +1,32 @@
 import { Bill } from "../../types/types";
+import { useState, useEffect } from "react";
 
-function DetailedBillView({bill}: {bill: Bill}) {
+function DetailedBillView({billId}: {billId: number}) {
+
+  let headers = {
+    "Authorization": "Bearer " + localStorage.getItem("token")
+  }
+
+  const [bill, setBill] = useState<Bill>({
+    id: 0,
+    storeName: "",
+    date: "",
+    location: "",
+    totalAmount: 0,
+    products: []
+  });
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      let response = await fetch("http://localhost:8080/bills/" + billId, {headers: headers});
+      let data = await response.json();
+      setBill(data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <div className="size-full grid grid-rows-[1fr_3fr] grid-cols-[1fr_4fr] gap-5">
       <div className="flex flex-col justify-center items-center text-left bg-slate-300 rounded-lg shadow-lg">

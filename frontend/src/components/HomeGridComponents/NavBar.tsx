@@ -15,6 +15,7 @@ function NavBar() {
   }
 
   function handleLogout(){
+    localStorage.removeItem("token");
     navigate("/login");
   }
 

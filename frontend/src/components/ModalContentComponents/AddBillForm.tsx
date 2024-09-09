@@ -1,10 +1,13 @@
 import { useState, useContext } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 interface BillFormType {
     storeName: string;
     location: string;
     date: string;
+    totalAmount?: number;
     products: ProductFormType[];
 }
 
@@ -17,6 +20,10 @@ interface ProductFormType {
 }
 
 function AddBillForm(){
+
+    let headers = {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+    }
 
     const { setShowModal } = useContext(ModalContext) as ModalContextType;
 
@@ -51,7 +58,6 @@ function AddBillForm(){
     }
 
     function handleKeyPress(e: React.KeyboardEvent){
-        console.log(e.key)
         if (e.key === "Enter") handleAddProduct()
     }
 
@@ -85,13 +91,23 @@ function AddBillForm(){
         setEditState({state: true, index})
     }
 
-    function handleAddBill(){
-        // if (billForm.storeName === "" || billForm.location === "" || billForm.date === "" || billForm.products.length === 0) return
-        console.log(billForm)
-        setShowModal(false)
+    async function handleAddBill(){
+        if (billForm.storeName === "" || billForm.location === "" || billForm.date === "" || billForm.products.length === 0) return;
+        let totalAmount = 0;
+        billForm.products.forEach(product => {
+            totalAmount += product.price * product.quantity
+        });
+        const payload = {...billForm, totalAmount};
+
+        let response = await axios.post("http://localhost:8080/bills", payload, {headers: headers});
+        if (response.status === 201){
+            toast.success("Bill added successfully")
+            setShowModal(false)
+        }else{
+            toast.error("Failed to add bill")
+        }
+        
     }
-
-
 
     return (
         <div className="size-full grid grid-rows-[2.2fr_5fr_0.6fr] grid-cols-[1.5fr_2fr] gap-2.5 font-mono">

@@ -16,3 +16,14 @@ export interface Product {
     units: string;
     category: string;
 }
+
+export interface MonthSpend {
+    name: string;
+    amount: string;
+}
+
+export interface spendByCategory{
+    yearMonth: string,
+    amount: number,
+    category: string
+}
