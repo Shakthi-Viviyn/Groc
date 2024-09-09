@@ -21,12 +21,12 @@ public class CategorySpend {
     @JsonIgnore
     private Long id;
     private YearMonth yearMonth;
-    private BigDecimal spend;
+    private BigDecimal amount;
     private String category;
 
-    public CategorySpend(YearMonth yearMonth, BigDecimal spend, String category, User user) {
+    public CategorySpend(YearMonth yearMonth, BigDecimal amount, String category, User user) {
         this.yearMonth = yearMonth;
-        this.spend = spend;
+        this.amount = amount;
         this.category = category;
         this.user = user;
     }

@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-public class UserController {
+@RestController
+public class UserController{
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
@@ -28,6 +28,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
+        if (user.getUsername() == null || user.getPassword() == null) return ResponseEntity.status(400).body("Username or Password not found");
         if(userDetailsService.saveUser(user)){
             return ResponseEntity.status(200).body("Account successfully registered");
         }else{

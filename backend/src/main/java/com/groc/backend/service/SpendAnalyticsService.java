@@ -2,6 +2,7 @@ package com.groc.backend.service;
 
 import com.groc.backend.model.dto.BillDto;
 import com.groc.backend.model.dto.ProductDto;
+import com.groc.backend.model.dto.SpendByMonthDto;
 import com.groc.backend.model.entity.CategorySpend;
 import com.groc.backend.model.entity.User;
 import com.groc.backend.repository.BillRepository;
@@ -29,7 +30,7 @@ public class SpendAnalyticsService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<?> getSpendLastYear(Long userId) {
+    public List<SpendByMonthDto> getSpendLastYear(Long userId) {
         return billRepo.findSpendFromPastYear(userId);
     }
 
@@ -50,7 +51,7 @@ public class SpendAnalyticsService {
 
             CategorySpend categorySpend = categorySpendMap.get(currCategory);
             if (categorySpend != null){
-                categorySpend.setSpend(categorySpend.getSpend().add(itemAmount));
+                categorySpend.setAmount(categorySpend.getAmount().add(itemAmount));
                 categorySpendMap.put(currCategory, categorySpend);
             }else{
                 User user = userRepository.getReferenceById(userId);

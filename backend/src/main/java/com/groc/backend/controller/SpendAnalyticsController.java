@@ -1,5 +1,6 @@
 package com.groc.backend.controller;
 
+import com.groc.backend.model.dto.SpendByMonthDto;
 import com.groc.backend.model.entity.CategorySpend;
 import com.groc.backend.service.SpendAnalyticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class SpendAnalyticsController {
     }
 
     @GetMapping("/spendPastYear")
-    public List<?> getSpendPastYear(){
+    public List<SpendByMonthDto> getSpendPastYear(){
         Long userId = getRequestUserId();
         return spendAnalyticsService.getSpendLastYear(userId);
     }
