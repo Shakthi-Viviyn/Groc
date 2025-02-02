@@ -1,6 +1,7 @@
 package com.groc.backend.service;
 
 import com.groc.backend.model.dto.BillDto;
+import com.groc.backend.model.dto.MonthMetricsDto;
 import com.groc.backend.model.dto.ProductDto;
 import com.groc.backend.model.dto.SpendByMonthDto;
 import com.groc.backend.model.entity.CategorySpend;
@@ -13,6 +14,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
@@ -65,4 +68,18 @@ public class SpendAnalyticsService {
 
     }
 
+    public MonthMetricsDto getMetricsCurrMonth(Long userId) throws SQLException {
+        Object[] result = (Object[]) ((Object[]) billRepo.findBillCountAndTotalAmountByUserIdForCurrentMonth(userId))[0];
+
+        Long numBills = (Long) result[0];
+        BigDecimal totalAmount = (BigDecimal) result[1];
+
+        if (numBills < 0) {
+            throw new SQLException("invalid data returned");
+        } else if (numBills == 0) {
+            return new MonthMetricsDto(BigDecimal.ZERO, BigDecimal.ZERO);
+        }else{
+            return new MonthMetricsDto(totalAmount, totalAmount.divide(BigDecimal.valueOf(numBills), 2, RoundingMode.HALF_UP));
+        }
+    }
 }
