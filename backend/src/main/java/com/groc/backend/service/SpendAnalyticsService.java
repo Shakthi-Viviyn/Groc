@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
@@ -67,12 +68,18 @@ public class SpendAnalyticsService {
 
     }
 
-    public MonthMetricsDto getMetricsCurrMonth(Long userId) {
+    public MonthMetricsDto getMetricsCurrMonth(Long userId) throws SQLException {
         Object[] result = (Object[]) ((Object[]) billRepo.findBillCountAndTotalAmountByUserIdForCurrentMonth(userId))[0];
 
         Long numBills = (Long) result[0];
         BigDecimal totalAmount = (BigDecimal) result[1];
-        return new MonthMetricsDto(totalAmount, totalAmount.divide(BigDecimal.valueOf(numBills)));
 
+        if (numBills < 0) {
+            throw new SQLException("invalid data returned");
+        } else if (numBills == 0) {
+            return new MonthMetricsDto(BigDecimal.ZERO, BigDecimal.ZERO);
+        }else{
+            return new MonthMetricsDto(totalAmount, totalAmount.divide(BigDecimal.valueOf(numBills), 2, RoundingMode.HALF_UP));
+        }
     }
 }

@@ -33,9 +33,9 @@ public class BillService {
 
     @Autowired
     private UserRepository userRepo;
+
     @Autowired
     private SpendAnalyticsService spendAnalyticsService;
-
 
     public void createBill(BillDto billData, Long userId) {
 

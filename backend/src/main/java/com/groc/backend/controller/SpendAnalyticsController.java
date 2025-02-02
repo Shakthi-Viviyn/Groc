@@ -5,10 +5,12 @@ import com.groc.backend.model.dto.SpendByMonthDto;
 import com.groc.backend.model.entity.CategorySpend;
 import com.groc.backend.service.SpendAnalyticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -29,10 +31,15 @@ public class SpendAnalyticsController {
     }
 
     @GetMapping("/metricsCurrMonth")
-    public MonthMetricsDto getMetricsCurrMonth(){
-        System.out.println("getMetricsCurrMonth");
+    public ResponseEntity<?> getMetricsCurrMonth() {
         Long userId = getRequestUserId();
-        return spendAnalyticsService.getMetricsCurrMonth(userId);
+        try {
+            MonthMetricsDto currMonthMetrics = spendAnalyticsService.getMetricsCurrMonth(userId);
+            return ResponseEntity.status(200).body(currMonthMetrics);
+        }catch (SQLException e){
+            return ResponseEntity.status(500).body(e.getMessage());
+        }
+
     }
 
     @GetMapping("/spendByCategory")
