@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -30,7 +30,7 @@ function AddBillForm(){
     const [billForm, setBillForm] = useState<BillFormType>({
         storeName: "",
         location: "",
-        date: "",
+        date: (new Date()).toISOString().split('T')[0], // leave out time part of ISO string
         products: []
     })
 
