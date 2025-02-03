@@ -8,13 +8,18 @@ export interface Bill {
 }
 
 export interface Product {
-    id: number;
+    id?: number;
     brand: string;
     name: string;
     price: number;
-    quantity: number;
+    quantity?: number;
     units: string;
     category: string;
+}
+
+export interface Brand {
+    id?: number,
+    name: string
 }
 
 export interface MonthSpend {

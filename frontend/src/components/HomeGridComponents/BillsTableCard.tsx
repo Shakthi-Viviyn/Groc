@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
 import DetailedBillView from "../ModalContentComponents/DetailedBillView";
 import { Bill } from "../../types/types";
+import { HEADERS } from "../common/axios-header";
 import axios from "axios";
 
 
@@ -12,14 +13,10 @@ function BillsTableCard(){
 
     let { setShowModal, setModalContent } = useContext(ModalContext) as ModalContextType;
 
-    let headers = {
-        "Authorization": "Bearer " + localStorage.getItem("token")
-    }
-
     useEffect(() => {
 
         const fetchData = async () => {
-            let response = await axios.get("http://localhost:8080/bills", {headers: headers});
+            let response = await axios.get("http://localhost:8080/bills", {headers: HEADERS});
             setBills(response.data);
         }
 

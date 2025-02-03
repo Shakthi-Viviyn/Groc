@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from "recharts";
 import axios from "axios";
+import { HEADERS } from "../common/axios-header";
 import { spendByCategory } from "../../types/types";
 
 function SpendDistributionCard(){
-
-    let headers = {
-      "Authorization": "Bearer " + localStorage.getItem("token")
-    }
 
     const [graphData, setGraphData] = useState<spendByCategory[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: headers});
+            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: HEADERS});
             let responseData: spendByCategory[] = response.data;
             for (let i = 0; i < responseData.length; i++){
                 if (responseData[i].category === null){

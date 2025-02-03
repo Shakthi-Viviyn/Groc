@@ -2,6 +2,8 @@ import { useState, useContext, useEffect } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Brand, Product } from "../../types/types";
+import SearchableDropdown from "../common/SearchableDropdown";
 
 interface BillFormType {
     storeName: string;
@@ -18,6 +20,10 @@ interface ProductFormType {
     quantity: number;
     units: string;
 }
+
+const brandSearchUrl = "http://localhost:8080/brand?name=";
+const productSearchUrl = "http://localhost:8080/product?brand=Co&name=";
+
 
 function AddBillForm(){
 
@@ -144,14 +150,8 @@ function AddBillForm(){
             </div>
 
             <div className="bg-slate-300 flex flex-col gap-8 justify-center items-center col-start-2 col-end-3 row-start-1 row-end-3 rounded-lg shadow-lg p-5" onKeyDown={handleKeyPress}>
-                <div className="flex gap-2">
-                    <label className="">Brand:</label>
-                    <input type="text" name="brand" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.brand} onChange={handleProductInput}/>
-                </div>
-                <div className="flex gap-2">
-                    <label className="">Name:</label>
-                    <input type="text" name="name" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.name} onChange={handleProductInput}/>
-                </div>
+                <SearchableDropdown<Brand> label="Branch:" nameFieldKey="name" url={brandSearchUrl} apiProvidesIds={false}/>
+                <SearchableDropdown<Product> label="Name:" nameFieldKey="name" url={productSearchUrl} apiProvidesIds={true}/>
                 <div className="flex gap-2">
                     <label className="">Price:</label>
                     <input type="number" name="price" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.price} onChange={handleProductInput}/>
