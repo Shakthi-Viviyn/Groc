@@ -150,7 +150,7 @@ function AddBillForm(){
             </div>
 
             <div className="bg-slate-300 flex flex-col gap-8 justify-center items-center col-start-2 col-end-3 row-start-1 row-end-3 rounded-lg shadow-lg p-5" onKeyDown={handleKeyPress}>
-                <SearchableDropdown<Brand> label="Branch:" nameFieldKey="name" url={brandSearchUrl} apiProvidesIds={false}/>
+                <SearchableDropdown<Brand> label="Brand:" nameFieldKey="name" url={brandSearchUrl} apiProvidesIds={false}/>
                 <SearchableDropdown<Product> label="Name:" nameFieldKey="name" url={productSearchUrl} apiProvidesIds={true}/>
                 <div className="flex gap-2">
                     <label className="">Price:</label>
