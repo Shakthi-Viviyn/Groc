@@ -1,8 +1,8 @@
 export interface Bill {
-    id: number;
+    id?: number;
     storeName: string;
     location: string;
-    totalAmount: number;
+    totalAmount?: number;
     date: string;
     products: Product[];
 }
@@ -14,12 +14,11 @@ export interface Product {
     price: number;
     quantity?: number;
     units: string;
-    category: string;
+    category?: string;
 }
 
 export interface Brand {
-    id?: number,
-    name: string
+    brand: string
 }
 
 export interface MonthSpend {

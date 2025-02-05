@@ -25,7 +25,7 @@ function BillsTableCard(){
     
     function handleBillClick(bill: Bill){
         setShowModal(true);
-        setModalContent(<DetailedBillView billId={bill.id}/>);
+        setModalContent(<DetailedBillView billId={bill.id!}/>);
     }
 
     return (
