@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getAuth } from "../common/axios-header";
 import axios from "axios";
 
 interface MetricsInfo {
@@ -8,11 +9,6 @@ interface MetricsInfo {
 
 function MetricsCard() {
 
-
-  let headers = {
-    "Authorization": "Bearer " + localStorage.getItem("token")
-  }
-
   const [metricData, setMetricData] = useState<MetricsInfo>({
     totalAmount: 0,
     avgAmountPerBill: 0
@@ -20,7 +16,7 @@ function MetricsCard() {
 
   useEffect(() => {
       const fetchData = async () => {
-          let response = await axios.get("http://localhost:8080/metricsCurrMonth", {headers: headers});
+          let response = await axios.get("http://localhost:8080/metricsCurrMonth", {headers: getAuth()});
           setMetricData(response.data);
       }
       fetchData();

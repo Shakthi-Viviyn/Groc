@@ -2,19 +2,15 @@ import { AreaChart, YAxis, XAxis, Tooltip, Area, ResponsiveContainer } from "rec
 import { useEffect, useState } from "react";
 import { MonthSpend } from "../../types/types";
 import axios from "axios";
-
+import { getAuth } from "../common/axios-header";
 
 function SpendGraphCard(){
-
-    let headers = {
-        "Authorization": "Bearer " + localStorage.getItem("token")
-    }
 
     const [graphData, setGraphData] = useState<MonthSpend[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            let response = await axios.get("http://localhost:8080/spendPastYear", {headers: headers});
+            let response = await axios.get("http://localhost:8080/spendPastYear", {headers: getAuth()});
             setGraphData(response.data);
         }
         fetchData();

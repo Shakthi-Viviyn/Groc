@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
@@ -22,15 +22,24 @@ function LoginScreen(){
         return emailRegex.test(email);
     }
 
-
+    useEffect(() => {
+        const handleEnterKey = (e: KeyboardEvent) => {
+          if (e.key === 'Enter') {
+            handleSubmit();
+          }
+        };
+        window.addEventListener('keydown', handleEnterKey);
+        return () => {
+          window.removeEventListener('keydown', handleEnterKey);
+        };
+      }, []);
 
     async function handleSubmit(){
 
-        if (form.email === "" || !isValidEmail(form.email)){
-            console.log(form)
-            toast.error("Please enter the e-mail address");
-            return;
-        }
+        // if (form.email === "" || !isValidEmail(form.email)){
+        //     toast.error("Please enter the e-mail address");
+        //     return;
+        // }
         if (form.password === ""){
             toast.error("Please enter the password");
             return;

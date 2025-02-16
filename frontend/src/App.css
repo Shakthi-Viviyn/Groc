@@ -6,6 +6,18 @@
     @apply border-2 border-transparent hover:border-slate-500 transition-all duration-[50ms];
 }
 
+.dpdown-input-effect{
+    @apply border-2 border-transparent hover:border-slate-500 focus:border-slate-500 transition-all duration-[50ms];
+}
+
+.dpdown-item-hover{
+    @apply border-y-2 border-transparent hover:border-slate-500 transition-all duration-[50ms];
+}
+
+.dropdown-effect{
+    @apply transition-all duration-[50ms];
+}
+
 .background{
     background: linear-gradient(-45deg,#E4E5E6, #00416A);
 }

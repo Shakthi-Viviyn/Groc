@@ -1,20 +1,29 @@
 export interface Bill {
-    id: number;
-    storeName: string;
-    location: string;
-    totalAmount: number;
+    id?: number;
+    store: Store;
+    totalAmount?: number;
     date: string;
     products: Product[];
 }
 
+export interface Store {
+    id?: number;
+    name: string;
+    location: string;
+}
+
 export interface Product {
-    id: number;
+    id?: number;
     brand: string;
     name: string;
     price: number;
-    quantity: number;
+    quantity?: number;
     units: string;
-    category: string;
+    category?: string;
+}
+
+export interface Brand {
+    brand: string
 }
 
 export interface MonthSpend {

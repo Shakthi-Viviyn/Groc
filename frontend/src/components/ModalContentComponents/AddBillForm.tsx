@@ -1,40 +1,25 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
 import axios from "axios";
 import { toast } from "react-toastify";
-
-interface BillFormType {
-    storeName: string;
-    location: string;
-    date: string;
-    totalAmount?: number;
-    products: ProductFormType[];
-}
-
-interface ProductFormType {
-    brand: string;
-    name: string;
-    price: number;
-    quantity: number;
-    units: string;
-}
+import { Bill, Brand, Product } from "../../types/types";
+import SearchableDropdown from "../common/SearchableDropdown";
+import { getAuth } from "../common/axios-header";
 
 function AddBillForm(){
 
-    let headers = {
-        "Authorization": "Bearer " + localStorage.getItem("token")
-    }
-
     const { setShowModal } = useContext(ModalContext) as ModalContextType;
 
-    const [billForm, setBillForm] = useState<BillFormType>({
-        storeName: "",
-        location: "",
-        date: "",
+    const [billForm, setBillForm] = useState<Bill>({
+        store: {
+            name: "",
+            location: ""
+        },
+        date: (new Date()).toISOString().split('T')[0], // leave out time part of ISO string
         products: []
     })
 
-    const [productForm, setProductForm] = useState<ProductFormType>({
+    const [productForm, setProductForm] = useState<Product>({
         brand: "",
         name: "",
         price: 0,
@@ -49,12 +34,15 @@ function AddBillForm(){
 
     function handleBillDetailsInput(e: React.ChangeEvent<HTMLInputElement>){
         const {name, value} = e.target;
-        setBillForm({...billForm, [name]: value})
+        if (name === "storeName" || name === "storeLocation"){
+            setBillForm( prev => ({...prev, store: {...prev.store, name: value}}))
+        }
+        setBillForm( prev => ({...prev, [name]: value}))
     }
 
     function handleProductInput(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>){
         const {name, value} = e.target;
-        setProductForm({...productForm, [name]: value})
+        setProductForm( prev => ({...prev, [name]: value}))
     }
 
     function handleKeyPress(e: React.KeyboardEvent){
@@ -67,16 +55,11 @@ function AddBillForm(){
             billForm.products[editState.index] = productForm
             setEditState({state: false, index: 0})
             setBillForm({...billForm})
-            setProductForm({
-                brand: "",
-                name: "",
-                price: 0,
-                quantity: 0,
-                units: ""
-            })
-            return
+
+        } else {
+            setBillForm({...billForm, products: [...billForm.products, productForm]})
         }
-        setBillForm({...billForm, products: [...billForm.products, productForm]})
+
         setProductForm({
             brand: "",
             name: "",
@@ -86,20 +69,20 @@ function AddBillForm(){
         })
     }
 
-    function handleEditProduct(product: ProductFormType, index: number){
+    function handleEditProduct(product: Product, index: number){
         setProductForm(product)
         setEditState({state: true, index})
     }
 
     async function handleAddBill(){
-        if (billForm.storeName === "" || billForm.location === "" || billForm.date === "" || billForm.products.length === 0) return;
+        if (billForm.store.name === "" || billForm.store.location === "" || billForm.date === "" || billForm.products.length === 0) return;
         let totalAmount = 0;
         billForm.products.forEach(product => {
-            totalAmount += product.price * product.quantity
+            totalAmount += product.price * product.quantity!
         });
         const payload = {...billForm, totalAmount};
 
-        let response = await axios.post("http://localhost:8080/bills", payload, {headers: headers});
+        let response = await axios.post("http://localhost:8080/bills", payload, {headers: getAuth()});
         if (response.status === 201){
             toast.success("Bill added successfully")
             setShowModal(false)
@@ -109,17 +92,22 @@ function AddBillForm(){
         
     }
 
+    let brandSearchUrl = "http://localhost:8080/brand?name=";
+    let productSearchUrl = useMemo(() => (
+        `http://localhost:8080/product?brand=${productForm.brand}&name=`
+    ), [productForm.brand]);
+
     return (
         <div className="size-full grid grid-rows-[2.2fr_5fr_0.6fr] grid-cols-[1.5fr_2fr] gap-2.5 font-mono">
 
             <div className="bg-slate-300 flex flex-col gap-3 justify-center items-center rounded-lg shadow-lg p-5">
                 <div className="flex gap-2 items-center">
                     <label className="">Store Name:</label>
-                    <input type="text" name="storeName" value={billForm.storeName} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
+                    <input type="text" name="storeName" value={billForm.store.name} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">City:</label>
-                    <input type="text" name="location" value={billForm.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
+                    <input type="text" name="storeLocation" value={billForm.store.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">Date:</label>
@@ -144,14 +132,8 @@ function AddBillForm(){
             </div>
 
             <div className="bg-slate-300 flex flex-col gap-8 justify-center items-center col-start-2 col-end-3 row-start-1 row-end-3 rounded-lg shadow-lg p-5" onKeyDown={handleKeyPress}>
-                <div className="flex gap-2">
-                    <label className="">Brand:</label>
-                    <input type="text" name="brand" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.brand} onChange={handleProductInput}/>
-                </div>
-                <div className="flex gap-2">
-                    <label className="">Name:</label>
-                    <input type="text" name="name" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.name} onChange={handleProductInput}/>
-                </div>
+                <SearchableDropdown<Brand, Product> label="Brand:" nameFieldKey="brand" url={brandSearchUrl} formData={productForm} setFormData={setProductForm}/>
+                <SearchableDropdown<Product, Product> label="Name:" nameFieldKey="name" url={productSearchUrl} formData={productForm} setFormData={setProductForm} apiReturnsId/>
                 <div className="flex gap-2">
                     <label className="">Price:</label>
                     <input type="number" name="price" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.price} onChange={handleProductInput}/>

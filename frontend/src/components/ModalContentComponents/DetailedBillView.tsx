@@ -1,17 +1,16 @@
 import { Bill } from "../../types/types";
 import { useState, useEffect } from "react";
+import { getAuth } from "../common/axios-header";
 
 function DetailedBillView({billId}: {billId: number}) {
 
-  let headers = {
-    "Authorization": "Bearer " + localStorage.getItem("token")
-  }
-
   const [bill, setBill] = useState<Bill>({
     id: 0,
-    storeName: "",
+    store: {
+      name: "",
+      location: ""
+    },
     date: "",
-    location: "",
     totalAmount: 0,
     products: []
   });
@@ -19,7 +18,7 @@ function DetailedBillView({billId}: {billId: number}) {
   useEffect(() => {
 
     const fetchData = async () => {
-      let response = await fetch("http://localhost:8080/bills/" + billId, {headers: headers});
+      let response = await fetch("http://localhost:8080/bills/" + billId, {headers: getAuth()});
       let data = await response.json();
       setBill(data);
     }
@@ -37,7 +36,7 @@ function DetailedBillView({billId}: {billId: number}) {
         <div className="flex flex-col justify-evenly h-full">
             <div>
                 <h3>Store Name</h3>
-                <p className="text-2xl">{bill.storeName}</p>
+                <p className="text-2xl">{bill.store.name}</p>
             </div>
             <div className="h-[2px] rounded-lg bg-slate-500 w-full"/>
             <div>
@@ -47,7 +46,7 @@ function DetailedBillView({billId}: {billId: number}) {
             <div className="h-[2px] rounded-lg bg-slate-500 w-full"/>
             <div>
                 <h3>Location</h3>
-                <p className="text-2xl">{bill.location}</p>
+                <p className="text-2xl">{bill.store.location}</p>
             </div>
         </div>
       </div>

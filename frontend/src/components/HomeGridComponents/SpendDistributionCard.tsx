@@ -1,46 +1,16 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from "recharts";
 import axios from "axios";
+import { getAuth } from "../common/axios-header";
 import { spendByCategory } from "../../types/types";
 
 function SpendDistributionCard(){
-
-    // const data01 = [
-    //     {
-    //       "name": "Group A",
-    //       "value": 400
-    //     },
-    //     {
-    //       "name": "Group B",
-    //       "value": 300
-    //     },
-    //     {
-    //       "name": "Group C",
-    //       "value": 300
-    //     },
-    //     {
-    //       "name": "Group D",
-    //       "value": 200
-    //     },
-    //     {
-    //       "name": "Group E",
-    //       "value": 278
-    //     },
-    //     {
-    //       "name": "Group F",
-    //       "value": 189
-    //     }
-    //   ];
-
-    let headers = {
-      "Authorization": "Bearer " + localStorage.getItem("token")
-    }
 
     const [graphData, setGraphData] = useState<spendByCategory[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: headers});
+            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: getAuth()});
             let responseData: spendByCategory[] = response.data;
             for (let i = 0; i < responseData.length; i++){
                 if (responseData[i].category === null){
