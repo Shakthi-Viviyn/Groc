@@ -21,8 +21,6 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String storeName;
-    private String location;
     private BigDecimal totalAmount;
     private LocalDate date;
 
@@ -35,12 +33,15 @@ public class Bill {
     @JsonIgnore
     private Set<BillProduct> billProducts;
 
-    public Bill(String storeName, String location, BigDecimal totalAmount, LocalDate date, User user) {
-        this.storeName = storeName;
-        this.location = location;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    public Bill(BigDecimal totalAmount, LocalDate date, User user, Store store) {
         this.totalAmount = totalAmount;
         this.date = date;
         this.user = user;
+        this.store = store;
         this.billProducts = new HashSet<>();
     }
 
@@ -52,8 +53,8 @@ public class Bill {
     public String toString() {
         return "Bill{" +
                 "id=" + id +
-                ", storeName='" + storeName + '\'' +
-                ", location='" + location + '\'' +
+                ", storeName='" + store.getName() + '\'' +
+                ", location='" + store.getLocation() + '\'' +
                 ", totalAmount=" + totalAmount +
                 ", date=" + date +
 //                ", billProducts=" + billProducts +
