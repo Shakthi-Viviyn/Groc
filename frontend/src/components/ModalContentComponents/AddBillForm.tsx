@@ -2,7 +2,7 @@ import { useState, useContext, useEffect, useMemo } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Bill, Brand, Product } from "../../types/types";
+import { Bill, Brand, Product, Store } from "../../types/types";
 import SearchableDropdown from "../common/SearchableDropdown";
 import { getAuth } from "../common/axios-header";
 
@@ -10,13 +10,14 @@ function AddBillForm(){
 
     const { setShowModal } = useContext(ModalContext) as ModalContextType;
 
-    const [billForm, setBillForm] = useState<Bill>({
-        store: {
-            name: "",
-            location: ""
-        },
+    const [billForm, setBillForm] = useState<Partial<Bill>>({
         date: (new Date()).toISOString().split('T')[0], // leave out time part of ISO string
         products: []
+    })
+
+    const [storeForm, setStoreForm] = useState<Store>({
+        name: "",
+        location: ""
     })
 
     const [productForm, setProductForm] = useState<Product>({
@@ -34,9 +35,6 @@ function AddBillForm(){
 
     function handleBillDetailsInput(e: React.ChangeEvent<HTMLInputElement>){
         const {name, value} = e.target;
-        if (name === "storeName" || name === "storeLocation"){
-            setBillForm( prev => ({...prev, store: {...prev.store, name: value}}))
-        }
         setBillForm( prev => ({...prev, [name]: value}))
     }
 
@@ -52,12 +50,12 @@ function AddBillForm(){
     function handleAddProduct(){
         if (productForm.brand === "" || productForm.name === "" || productForm.price === 0 || productForm.quantity === 0 || productForm.units === "") return
         if (editState.state){
-            billForm.products[editState.index] = productForm
+            billForm.products![editState.index] = productForm
             setEditState({state: false, index: 0})
             setBillForm({...billForm})
 
         } else {
-            setBillForm({...billForm, products: [...billForm.products, productForm]})
+            setBillForm({...billForm, products: [...billForm.products!, productForm]})
         }
 
         setProductForm({
@@ -75,12 +73,12 @@ function AddBillForm(){
     }
 
     async function handleAddBill(){
-        if (billForm.store.name === "" || billForm.store.location === "" || billForm.date === "" || billForm.products.length === 0) return;
+        if (storeForm.name === "" || storeForm.location === "" || billForm.date === "" || billForm.products!.length === 0) return;
         let totalAmount = 0;
-        billForm.products.forEach(product => {
+        billForm.products!.forEach(product => {
             totalAmount += product.price * product.quantity!
         });
-        const payload = {...billForm, totalAmount};
+        const payload = {...billForm, totalAmount, store: {...storeForm}};
 
         let response = await axios.post("http://localhost:8080/bills", payload, {headers: getAuth()});
         if (response.status === 201){
@@ -89,7 +87,6 @@ function AddBillForm(){
         }else{
             toast.error("Failed to add bill")
         }
-        
     }
 
     let brandSearchUrl = "http://localhost:8080/brand?name=";
@@ -97,17 +94,20 @@ function AddBillForm(){
         `http://localhost:8080/product?brand=${productForm.brand}&name=`
     ), [productForm.brand]);
 
+    let storeNameSearchUrl = "http://localhost:8080/storeName?name=";
+    let storeLocSearchUrl = useMemo(() => (
+        `http://localhost:8080/store?name=${storeForm.name}&location=`
+    ), [storeForm.name]);
+
     return (
         <div className="size-full grid grid-rows-[2.2fr_5fr_0.6fr] grid-cols-[1.5fr_2fr] gap-2.5 font-mono">
 
             <div className="bg-slate-300 flex flex-col gap-3 justify-center items-center rounded-lg shadow-lg p-5">
                 <div className="flex gap-2 items-center">
-                    <label className="">Store Name:</label>
-                    <input type="text" name="storeName" value={billForm.store.name} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
+                    <SearchableDropdown<Store> label="Store Name:" stateKeyName="name" optionKeyName="name" url={storeNameSearchUrl} formData={storeForm} setFormData={setStoreForm}/>
                 </div>
                 <div className="flex gap-2 items-center">
-                    <label className="">City:</label>
-                    <input type="text" name="storeLocation" value={billForm.store.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
+                    <SearchableDropdown<Store> label="City:" stateKeyName="location" optionKeyName="location" url={storeLocSearchUrl} formData={storeForm} setFormData={setStoreForm} apiReturnsId/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">Date:</label>
@@ -118,7 +118,7 @@ function AddBillForm(){
             <div className="bg-slate-300 flex flex-col gap-3 row-start-2 row-end-4 rounded-lg shadow-lg p-3 overflow-y-auto">
                 <h3 className="text-lg">Products</h3>
                 <div className="flex flex-col gap-3 h-full">
-                    {billForm.products.length > 0 ? billForm.products.map((product, index) => (
+                    {billForm.products!.length > 0 ? billForm.products!.map((product, index) => (
                         <div key={index} className="flex justify-between bg-slate-200 p-3 rounded-lg cursor-pointer shadow-lg hover-effect" onClick={() => handleEditProduct(product, index)}>
                             <div className="flex gap-2">
                                 <h4>{product.brand}</h4>-<h4>{product.name}</h4>
@@ -132,8 +132,8 @@ function AddBillForm(){
             </div>
 
             <div className="bg-slate-300 flex flex-col gap-8 justify-center items-center col-start-2 col-end-3 row-start-1 row-end-3 rounded-lg shadow-lg p-5" onKeyDown={handleKeyPress}>
-                <SearchableDropdown<Brand, Product> label="Brand:" nameFieldKey="brand" url={brandSearchUrl} formData={productForm} setFormData={setProductForm}/>
-                <SearchableDropdown<Product, Product> label="Name:" nameFieldKey="name" url={productSearchUrl} formData={productForm} setFormData={setProductForm} apiReturnsId/>
+                <SearchableDropdown<Product> label="Brand:" stateKeyName="brand" optionKeyName="name" url={brandSearchUrl} formData={productForm} setFormData={setProductForm}/>
+                <SearchableDropdown<Product> label="Name:" stateKeyName="name" optionKeyName="name" url={productSearchUrl} formData={productForm} setFormData={setProductForm} apiReturnsId/>
                 <div className="flex gap-2">
                     <label className="">Price:</label>
                     <input type="number" name="price" className="bg-slate-200 rounded-md px-2 py-1 hover-effect" value={productForm.price} onChange={handleProductInput}/>
