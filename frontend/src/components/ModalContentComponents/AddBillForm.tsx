@@ -4,15 +4,17 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { Bill, Brand, Product } from "../../types/types";
 import SearchableDropdown from "../common/SearchableDropdown";
-import { HEADERS } from "../common/axios-header";
+import { getAuth } from "../common/axios-header";
 
 function AddBillForm(){
 
     const { setShowModal } = useContext(ModalContext) as ModalContextType;
 
     const [billForm, setBillForm] = useState<Bill>({
-        storeName: "",
-        location: "",
+        store: {
+            name: "",
+            location: ""
+        },
         date: (new Date()).toISOString().split('T')[0], // leave out time part of ISO string
         products: []
     })
@@ -32,6 +34,9 @@ function AddBillForm(){
 
     function handleBillDetailsInput(e: React.ChangeEvent<HTMLInputElement>){
         const {name, value} = e.target;
+        if (name === "storeName" || name === "storeLocation"){
+            setBillForm( prev => ({...prev, store: {...prev.store, name: value}}))
+        }
         setBillForm( prev => ({...prev, [name]: value}))
     }
 
@@ -70,14 +75,14 @@ function AddBillForm(){
     }
 
     async function handleAddBill(){
-        if (billForm.storeName === "" || billForm.location === "" || billForm.date === "" || billForm.products.length === 0) return;
+        if (billForm.store.name === "" || billForm.store.location === "" || billForm.date === "" || billForm.products.length === 0) return;
         let totalAmount = 0;
         billForm.products.forEach(product => {
             totalAmount += product.price * product.quantity!
         });
         const payload = {...billForm, totalAmount};
 
-        let response = await axios.post("http://localhost:8080/bills", payload, {headers: HEADERS});
+        let response = await axios.post("http://localhost:8080/bills", payload, {headers: getAuth()});
         if (response.status === 201){
             toast.success("Bill added successfully")
             setShowModal(false)
@@ -98,11 +103,11 @@ function AddBillForm(){
             <div className="bg-slate-300 flex flex-col gap-3 justify-center items-center rounded-lg shadow-lg p-5">
                 <div className="flex gap-2 items-center">
                     <label className="">Store Name:</label>
-                    <input type="text" name="storeName" value={billForm.storeName} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
+                    <input type="text" name="storeName" value={billForm.store.name} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">City:</label>
-                    <input type="text" name="location" value={billForm.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
+                    <input type="text" name="storeLocation" value={billForm.store.location} onChange={handleBillDetailsInput} className="bg-slate-200 rounded-md px-2 py-1 hover-effect"/>
                 </div>
                 <div className="flex gap-2 items-center">
                     <label className="">Date:</label>

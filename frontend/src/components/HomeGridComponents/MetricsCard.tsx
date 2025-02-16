@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { HEADERS } from "../common/axios-header";
+import { getAuth } from "../common/axios-header";
 import axios from "axios";
 
 interface MetricsInfo {
@@ -16,7 +16,7 @@ function MetricsCard() {
 
   useEffect(() => {
       const fetchData = async () => {
-          let response = await axios.get("http://localhost:8080/metricsCurrMonth", {headers: HEADERS});
+          let response = await axios.get("http://localhost:8080/metricsCurrMonth", {headers: getAuth()});
           setMetricData(response.data);
       }
       fetchData();

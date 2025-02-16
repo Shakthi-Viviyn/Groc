@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Legend } from "recharts";
 import axios from "axios";
-import { HEADERS } from "../common/axios-header";
+import { getAuth } from "../common/axios-header";
 import { spendByCategory } from "../../types/types";
 
 function SpendDistributionCard(){
@@ -10,7 +10,7 @@ function SpendDistributionCard(){
 
     useEffect(() => {
         const fetchData = async () => {
-            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: HEADERS});
+            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: getAuth()});
             let responseData: spendByCategory[] = response.data;
             for (let i = 0; i < responseData.length; i++){
                 if (responseData[i].category === null){

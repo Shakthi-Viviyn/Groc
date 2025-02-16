@@ -1,3 +1,3 @@
-export const HEADERS = {
+export const getAuth = () => ({
     "Authorization": "Bearer " + localStorage.getItem("token")
-}
+})

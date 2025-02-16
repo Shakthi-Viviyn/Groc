@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect, SetStateAction, Dispatch } from "react";
-import { HEADERS } from "./axios-header";
+import { getAuth } from "./axios-header";
 import axios, { AxiosResponse } from "axios";
 
 interface SearchableDropdownProps<Q> {
@@ -29,7 +29,7 @@ function SearchableDropdown< T extends { [key:string] : any }, Q extends { [key:
     useEffect(() => {
         if (!showDropdown && !formData[nameFieldKey]) return;
         const fetchOptions = async () => {
-            let response: AxiosResponse<T[]> = await axios.get(`${url}${formData[nameFieldKey]}`, {headers: HEADERS});
+            let response: AxiosResponse<T[]> = await axios.get(`${url}${formData[nameFieldKey]}`, {headers: getAuth()});
             let respOptions = (response.data.length === 0) ? [{[nameFieldKey]: formData[nameFieldKey]} as T] : response.data;
             setOptions(respOptions);
         }

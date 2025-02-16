@@ -1,10 +1,15 @@
 export interface Bill {
     id?: number;
-    storeName: string;
-    location: string;
+    store: Store;
     totalAmount?: number;
     date: string;
     products: Product[];
+}
+
+export interface Store {
+    id?: number;
+    name: string;
+    location: string;
 }
 
 export interface Product {
