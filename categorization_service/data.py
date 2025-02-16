@@ -21,7 +21,7 @@ grocery_categories = {
         "Rice", "Oatmeal", "Coffee", "Tea", "Spices", "Herbs", "Vinegar", "Soy Sauce", "Honey", "Jam"
     ],
     "Snacks & Beverages": [
-        "Chips", "Crackers", "Cookies", "Candy", "Chocolate", "Soda", "Juice", "Water", "Coffee", "Tea",
+        "Chips", "Crackers", "Cookies", "Candy", "Chocolate", "Soda", "Juice", "Water", "Coffee", "Tea", "Tea bags", "Coffee beans",
         "Pretzels", "Popcorn", "Granola Bars", "Energy Drinks", "Sports Drinks", "Iced Tea", "Lemonade", "Smoothies", "Protein Bars", "Trail Mix"
     ],
     "Frozen Foods": [

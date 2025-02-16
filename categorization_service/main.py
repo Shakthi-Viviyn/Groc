@@ -21,7 +21,7 @@ def init():
 
 init()
 
-@app.post("/categorize/")
+@app.post("/categorize")
 async def categorize(products: List[Product]) -> List[CategorizedProduct]:
 
     response = []
