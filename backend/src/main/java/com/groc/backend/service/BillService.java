@@ -1,26 +1,25 @@
 package com.groc.backend.service;
 
 import com.groc.backend.model.dto.BillDto;
+import com.groc.backend.model.dto.CategorizationDto;
 import com.groc.backend.model.dto.ProductDto;
-import com.groc.backend.model.entity.Bill;
-import com.groc.backend.model.entity.BillProduct;
-import com.groc.backend.model.entity.Product;
-import com.groc.backend.model.entity.User;
-import com.groc.backend.repository.BillProductRepository;
-import com.groc.backend.repository.BillRepository;
-import com.groc.backend.repository.ProductRepository;
+import com.groc.backend.model.entity.*;
+import com.groc.backend.repository.*;
 
-import com.groc.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BillService {
+
+    private static final Logger log = LoggerFactory.getLogger(BillService.class);
 
     @Autowired
     private BillRepository billRepo;
@@ -35,26 +34,45 @@ public class BillService {
     private UserRepository userRepo;
 
     @Autowired
+    private CategorizationApiService categorizeService;
+
+    @Autowired
     private SpendAnalyticsService spendAnalyticsService;
+
+    @Autowired
+    private StoreRepository storeRepo;
 
     public void createBill(BillDto billData, Long userId) {
 
-        Optional<User> user = userRepo.findById(userId);
-        if (user.isEmpty()) throw new UsernameNotFoundException("User not found");
+        User user = userRepo.getReferenceById(userId);
 
-        Bill bill = billData.newBillEntity(user.get());
-        for (ProductDto prodItr : billData.getProducts()){
+        Store store;
+        Long storeId = billData.getStore().getId();
+        if (storeId != null){
+            store = storeRepo.getReferenceById(storeId);
+        }else{
+            store = billData.getStore().newStoreEntity();
+        }
+        Bill bill = billData.newBillEntity(user, store);
+
+        try {
+            this.addMissingCategoriesToProducts(billData);
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+
+        billData.getProducts().forEach(productDto -> {
             Product product;
-            if (prodItr.getId() == null){
-                product = prodItr.newProductEntity();
+            if (productDto.getId() == null){
+                product = productDto.newProductEntity();
                 productRepo.save(product);
             }else{
-                product = productRepo.getReferenceById(prodItr.getId());
+                product = productRepo.getReferenceById(productDto.getId());
             }
-
-            BillProduct billItem = prodItr.newBillItemEntity(bill, product);
+            BillProduct billItem = productDto.newBillItemEntity(bill, product);
             bill.addBillProduct(billItem);
-        }
+        });
+
         billRepo.save(bill);
 
         spendAnalyticsService.processBill(billData, userId);
@@ -85,5 +103,28 @@ public class BillService {
         }else{
             throw new EntityNotFoundException("Bill not found");
         }
+    }
+
+    private void addMissingCategoriesToProducts(BillDto billData){
+
+        List<CategorizationDto> uncategorizedProductList = billData.getProducts().stream()
+                .filter(product -> product.getCategory() == null)
+                .map(product -> new CategorizationDto(product.getName()))
+                .collect(Collectors.toList());
+
+        if (!uncategorizedProductList.isEmpty()){
+
+            List<CategorizationDto> categorizedProductList = categorizeService.getCategoriesForProducts(uncategorizedProductList);
+
+            Map<String, String> categoryMap = categorizedProductList.stream()
+                    .collect(Collectors.toMap(CategorizationDto::getName, CategorizationDto::getCategory));
+
+            billData.getProducts().forEach(product -> {
+                if (product.getCategory() == null){
+                    product.setCategory(categoryMap.get(product.getName()));
+                }
+            });
+        }
+
     }
 }

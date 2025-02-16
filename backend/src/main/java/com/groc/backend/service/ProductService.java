@@ -1,6 +1,7 @@
 package com.groc.backend.service;
 
 import com.groc.backend.model.entity.Product;
+import com.groc.backend.model.projection.SearchProjection;
 import com.groc.backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -18,5 +19,9 @@ public class ProductService {
     public List<Product> findProducts(String brand, String name){
         Pageable pageable = PageRequest.of(0, 20);
         return productRepo.findAllByNameStartingWithIgnoreCaseAndBrandStartingWithIgnoreCase(name, brand, pageable);
+    }
+
+    public List<SearchProjection> findBrands(String searchString) {
+        return productRepo.findBrandsStartWith(searchString, PageRequest.of(0, 20));
     }
 }
