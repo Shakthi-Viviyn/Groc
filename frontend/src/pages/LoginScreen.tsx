@@ -65,7 +65,7 @@ function LoginScreen(){
     return (
         <>
             <div className='size-full flex flex-col justify-center items-center background'>
-                <div className='flex flex-col items-center gap-10 p-10 bg-white rounded-lg p-10 w-96'>
+                <div className='flex flex-col items-center gap-10 p-10 bg-white rounded-lg w-96'>
                     <div className="m-5 w-full flex items-center justify-center">
                         <h1 className="text-2xl font-mono">Login</h1>
                     </div>

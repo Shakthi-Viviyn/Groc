@@ -1,8 +1,8 @@
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useContext, useMemo } from "react";
 import { ModalContext, ModalContextType } from "../../pages/Layout";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { Bill, Brand, Product, Store } from "../../types/types";
+import { Bill, Product, Store } from "../../types/types";
 import SearchableDropdown from "../common/SearchableDropdown";
 import { getAuth } from "../common/axios-header";
 
@@ -100,7 +100,7 @@ function AddBillForm(){
     ), [storeForm.name]);
 
     return (
-        <div className="size-full grid grid-rows-[2.2fr_5fr_0.6fr] grid-cols-[1.5fr_2fr] gap-2.5 font-mono">
+        <div className="size-full grid grid-rows-[2.2fr_5fr_0.6fr] grid-cols-[1.5fr_2fr] gap-6 font-mono">
 
             <div className="bg-slate-300 flex flex-col gap-3 justify-center items-center rounded-lg shadow-lg p-5">
                 <div className="flex gap-2 items-center">

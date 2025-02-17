@@ -22,6 +22,17 @@ export interface Product {
     category?: string;
 }
 
+export interface ProductPrice {
+    brand: string;
+    name: string;
+    productId: number;
+    storeId: number;
+    price: number;
+    date: string;
+    quantity: number;
+    units: string;
+}
+
 export interface Brand {
     brand: string
 }

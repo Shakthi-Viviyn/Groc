@@ -18,6 +18,14 @@
     @apply transition-all duration-[50ms];
 }
 
+.product-input{
+    @apply inline-block w-[200px] h-full bg-slate-200 rounded-md px-2 py-1 hover-effect;
+}
+
+.store-input{
+    @apply inline-block w-[200px] h-10 bg-slate-200 rounded-md px-2 py-1 hover-effect mt-3;
+}
+
 .background{
     background: linear-gradient(-45deg,#E4E5E6, #00416A);
 }
