@@ -69,17 +69,14 @@ public class SpendAnalyticsService {
     }
 
     public MonthMetricsDto getMetricsCurrMonth(Long userId) throws SQLException {
-        Object[] result = (Object[]) ((Object[]) billRepo.findBillCountAndTotalAmountByUserIdForCurrentMonth(userId))[0];
+        var metrics = billRepo.findBillCountAndTotalAmountByUserIdForCurrentMonth(userId);
 
-        Long numBills = (Long) result[0];
-        BigDecimal totalAmount = (BigDecimal) result[1];
-
-        if (numBills < 0) {
+        if (metrics.getNumBills() < 0) {
             throw new SQLException("invalid data returned");
-        } else if (numBills == 0) {
+        } else if (metrics.getNumBills() == 0) {
             return new MonthMetricsDto(BigDecimal.ZERO, BigDecimal.ZERO);
         }else{
-            return new MonthMetricsDto(totalAmount, totalAmount.divide(BigDecimal.valueOf(numBills), 2, RoundingMode.HALF_UP));
+            return new MonthMetricsDto(metrics.getTotalAmount(), metrics.getTotalAmount().divide(BigDecimal.valueOf(metrics.getNumBills()), 2, RoundingMode.HALF_UP));
         }
     }
 }

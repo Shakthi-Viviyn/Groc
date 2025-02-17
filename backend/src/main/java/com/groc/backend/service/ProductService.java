@@ -24,4 +24,12 @@ public class ProductService {
     public List<SearchProjection> findBrands(String searchString) {
         return productRepo.findBrandsStartWith(searchString, PageRequest.of(0, 20));
     }
+
+    public List<SearchProjection> findBrandsFromStore(Long storeId, String name) {
+        return productRepo.findBrandsFromStoreStartWith(storeId, name, PageRequest.of(0, 20));
+    }
+
+    public List<Product> findProductsFromStore(Long storeId, String brand, String name) {
+        return productRepo.findProductsFromStoreStartWith(storeId, brand, name, PageRequest.of(0, 20));
+    }
 }
