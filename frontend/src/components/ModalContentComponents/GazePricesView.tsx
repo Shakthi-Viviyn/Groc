@@ -24,10 +24,13 @@ export default function GazePricesView(){
 
     const [productList, setProductList] = useState<ProductPrice[]>([]);
 
-    let brandSearchUrl = "http://localhost:8080/brand?name=";
+    let brandSearchUrl = useMemo(() => (
+        `http://localhost:8080/store/${storeForm.id}/brand?name=`
+    ), [storeForm.id]);
+
     let productSearchUrl = useMemo(() => (
-        `http://localhost:8080/product?brand=${productItemForm.brand}&name=`
-    ), [productItemForm.brand]);
+        `http://localhost:8080/store/${storeForm.id}/product?brand=${productItemForm.brand}&name=`
+    ), [storeForm.id, productItemForm.brand]);
 
     let storeNameSearchUrl = "http://localhost:8080/storeName?name=";
     let storeLocSearchUrl = useMemo(() => (
