@@ -38,7 +38,7 @@ export interface Brand {
 }
 
 export interface MonthSpend {
-    name: string;
+    month: string;
     amount: string;
 }
 

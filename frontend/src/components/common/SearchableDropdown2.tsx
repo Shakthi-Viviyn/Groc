@@ -78,7 +78,7 @@ export default function SearchableDropdown2< Q extends { [key:string] : any }>({
                 { showDropdown && (options.length > 0) && <div className="absolute top-[120%] bg-slate-200 w-full rounded-lg shadow-lg z-50 max-h-[500%] overflow-y-scroll border-2 border-slate-500">
                     {options.map((option, i) => {
                         return (
-                            <div className="p-2 hover:bg-slate-300 cursor-pointer border-2 border-red-500" key={i} onMouseDown={() => handleOptionClick(option)}>
+                            <div className="p-2 hover:bg-slate-300 cursor-pointer border-2" key={i} onMouseDown={() => handleOptionClick(option)}>
                                 <p> {option[optionKeyName]} {option.id}</p>
                             </div>
                         )
