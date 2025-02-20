@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer, Label } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts";
 import axios from "axios";
 import { getAuth } from "../common/axios-header";
 import { spendByCategory } from "../../types/types";

@@ -36,10 +36,10 @@ function LoginScreen(){
 
     async function handleSubmit(){
 
-        // if (form.email === "" || !isValidEmail(form.email)){
-        //     toast.error("Please enter the e-mail address");
-        //     return;
-        // }
+        if (form.email === "" || !isValidEmail(form.email)){
+            toast.error("Please enter the e-mail address");
+            return;
+        }
         if (form.password === ""){
             toast.error("Please enter the password");
             return;
