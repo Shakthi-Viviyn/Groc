@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { getAuth } from "../components/common/axios-header";
+import { backendHost } from "../config";
 
 function HomeScreen(){
 
@@ -23,7 +24,7 @@ function HomeScreen(){
 
         const verifyToken = async () => {
             try {
-                let response = await await axios.get("http://localhost:8080/verify", {headers: getAuth()});
+                let response = await axios.get(`http://${backendHost}/verify`, {headers: getAuth()});
                 if (response.status !== 200){
                     console.log("token is not valid");
                     localStorage.removeItem("token");

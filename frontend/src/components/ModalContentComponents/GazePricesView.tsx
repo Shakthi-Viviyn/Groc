@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ProductPrice, Product, Store } from "../../types/types";
 import { getAuth } from "../common/axios-header";
 import SearchableDropdown2 from "../common/SearchableDropdown2";
+import { backendHost } from "../../config";
 
 export default function GazePricesView(){
 
@@ -25,16 +26,16 @@ export default function GazePricesView(){
     const [productList, setProductList] = useState<ProductPrice[]>([]);
 
     let brandSearchUrl = useMemo(() => (
-        `http://localhost:8080/store/${storeForm.id}/brand?name=`
+        `http://${backendHost}/store/${storeForm.id}/brand?name=`
     ), [storeForm.id]);
 
     let productSearchUrl = useMemo(() => (
-        `http://localhost:8080/store/${storeForm.id}/product?brand=${productItemForm.brand}&name=`
+        `http://${backendHost}/store/${storeForm.id}/product?brand=${productItemForm.brand}&name=`
     ), [storeForm.id, productItemForm.brand]);
 
-    let storeNameSearchUrl = "http://localhost:8080/storeName?name=";
+    let storeNameSearchUrl = `http://${backendHost}/storeName?name=`;
     let storeLocSearchUrl = useMemo(() => (
-        `http://localhost:8080/store?name=${storeForm.name}&location=`
+        `http://${backendHost}/store?name=${storeForm.name}&location=`
     ), [storeForm.name]);
 
     let totalAmount = useMemo(() => {
@@ -66,7 +67,7 @@ export default function GazePricesView(){
 
         if (productItemForm.brand === "" || productItemForm.name === "" || productItemForm.quantity === 0) return;
 
-        let response = await axios.get<Partial<ProductPrice>>(`http://localhost:8080/store/${storeForm.id}/product/${productItemForm.id}/price`, {headers: getAuth()});
+        let response = await axios.get<Partial<ProductPrice>>(`http://${backendHost}/store/${storeForm.id}/product/${productItemForm.id}/price`, {headers: getAuth()});
         if (response.status !== 200) return;
 
         const newItem = {

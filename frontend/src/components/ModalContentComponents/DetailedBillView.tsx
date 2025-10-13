@@ -1,6 +1,8 @@
 import { Bill } from "../../types/types";
 import { useState, useEffect } from "react";
 import { getAuth } from "../common/axios-header";
+import axios from "axios";
+import { backendHost } from "../../config";
 
 function DetailedBillView({billId}: {billId: number}) {
 
@@ -18,9 +20,8 @@ function DetailedBillView({billId}: {billId: number}) {
   useEffect(() => {
 
     const fetchData = async () => {
-      let response = await fetch("http://localhost:8080/bills/" + billId, {headers: getAuth()});
-      let data = await response.json();
-      setBill(data);
+      let response = await axios.get(`http://${backendHost}/bills/${billId}`, {headers: getAuth()});
+      setBill(response.data);
     }
 
     fetchData();

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAuth } from "../common/axios-header";
 import axios from "axios";
+import { backendHost } from "../../config";
 
 interface MetricsInfo {
   totalAmount: number,
@@ -16,7 +17,7 @@ function MetricsCard() {
 
   useEffect(() => {
       const fetchData = async () => {
-          let response = await axios.get("http://localhost:8080/metricsCurrMonth", {headers: getAuth()});
+          let response = await axios.get(`http://${backendHost}/metricsCurrMonth`, {headers: getAuth()});
           setMetricData(response.data);
       }
       fetchData();

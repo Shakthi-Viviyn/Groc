@@ -3,6 +3,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts";
 import axios from "axios";
 import { getAuth } from "../common/axios-header";
 import { spendByCategory } from "../../types/types";
+import { backendHost } from "../../config";
 
 export default function SpendDistributionCard(){
 
@@ -10,7 +11,7 @@ export default function SpendDistributionCard(){
 
     useEffect(() => {
         const fetchData = async () => {
-            let response  = await axios.get("http://localhost:8080/spendByCategory", {headers: getAuth()});
+            let response  = await axios.get(`http://${backendHost}/spendByCategory`, {headers: getAuth()});
             let responseData: spendByCategory[] = response.data;
             for (let i = 0; i < responseData.length; i++){
                 if (responseData[i].category === null){

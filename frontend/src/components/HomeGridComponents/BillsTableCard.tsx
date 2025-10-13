@@ -4,6 +4,7 @@ import DetailedBillView from "../ModalContentComponents/DetailedBillView";
 import { Bill } from "../../types/types";
 import { getAuth } from "../common/axios-header";
 import axios from "axios";
+import { backendHost } from "../../config.ts";
 
 
 
@@ -16,7 +17,7 @@ function BillsTableCard(){
     useEffect(() => {
 
         const fetchData = async () => {
-            let response = await axios.get("http://localhost:8080/bills", {headers: getAuth()});
+            let response = await axios.get(`http://${backendHost}/bills`, {headers: getAuth()});
             setBills(response.data);
         }
 

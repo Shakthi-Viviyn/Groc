@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { MonthSpend } from "../../types/types";
 import axios from "axios";
 import { getAuth } from "../common/axios-header";
+import { backendHost } from "../../config";
 
 function SpendGraphCard(){
 
@@ -11,7 +12,7 @@ function SpendGraphCard(){
 
     useEffect(() => {
         const fetchData = async () => {
-            let response = await axios.get("http://localhost:8080/spendPastYear", {headers: getAuth()});
+            let response = await axios.get(`http://${backendHost}/spendPastYear`, {headers: getAuth()});
             setGraphData(response.data);
         }
         fetchData();

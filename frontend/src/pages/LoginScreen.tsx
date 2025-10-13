@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import { backendHost } from "../config";
 
 function LoginScreen(){
 
@@ -50,7 +51,7 @@ function LoginScreen(){
             "password": form.password,
         }
 
-        let response = await axios.post("http://localhost:8080/login", payload);
+        let response = await axios.post(`http://${backendHost}/login`, payload);
         if (response.status === 200){
             let token: string = response.data;
             localStorage.setItem("token", token);

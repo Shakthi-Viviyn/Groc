@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { backendHost } from "../config";
 
 function SignUpScreen(){
 
@@ -47,7 +48,7 @@ function SignUpScreen(){
             "password": form.password,
         }
 
-        let response = await axios.post("http://localhost:8080/register", payload);
+        let response = await axios.post(`http://${backendHost}/register`, payload);
         if (response.status === 200){
             toast.success("Sign up successful");
             navigate("/login");

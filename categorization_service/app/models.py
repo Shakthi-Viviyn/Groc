@@ -5,5 +5,5 @@ class Product(BaseModel):
 
 class CategorizedProduct(BaseModel):
     name: str
-    category: str
+    category: str | None
     similarity: float

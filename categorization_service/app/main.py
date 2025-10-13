@@ -39,6 +39,9 @@ async def categorize(products: List[Product]) -> List[CategorizedProduct]:
                 best_similarity = similarity
                 best_category = category
         
+        if (best_similarity < 0.5):
+            best_category = None
+        
         response.append({"name": product.name, "category": best_category, "similarity": float(best_similarity)})
     
     return response

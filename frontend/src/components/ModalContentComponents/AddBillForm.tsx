@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Bill, Product, Store } from "../../types/types";
 import SearchableDropdown from "../common/SearchableDropdown";
 import { getAuth } from "../common/axios-header";
+import { backendHost } from "../../config";
 
 function AddBillForm(){
 
@@ -80,7 +81,7 @@ function AddBillForm(){
         });
         const payload = {...billForm, totalAmount, store: {...storeForm}};
 
-        let response = await axios.post("http://localhost:8080/bills", payload, {headers: getAuth()});
+        let response = await axios.post(`http://${backendHost}/bills`, payload, {headers: getAuth()});
         if (response.status === 201){
             toast.success("Bill added successfully")
             setShowModal(false)
@@ -89,14 +90,14 @@ function AddBillForm(){
         }
     }
 
-    let brandSearchUrl = "http://localhost:8080/brand?name=";
+    let brandSearchUrl = `http://${backendHost}/brand?name=`;
     let productSearchUrl = useMemo(() => (
-        `http://localhost:8080/product?brand=${productForm.brand}&name=`
+        `http://${backendHost}/product?brand=${productForm.brand}&name=`
     ), [productForm.brand]);
 
-    let storeNameSearchUrl = "http://localhost:8080/storeName?name=";
+    let storeNameSearchUrl = `http://${backendHost}/storeName?name=`;
     let storeLocSearchUrl = useMemo(() => (
-        `http://localhost:8080/store?name=${storeForm.name}&location=`
+        `http://${backendHost}/store?name=${storeForm.name}&location=`
     ), [storeForm.name]);
 
     return (
