@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 0306
+      POSTGRES_DB: GrocDB
+    ports:
+      - "5431:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - groc
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  groc-categorize:
+    build:
+      context: ./categorization_service
+      dockerfile: Dockerfile
+    container_name: groc-categorize
+    ports:
+      - "8000:8000"
+    networks:
+      - groc
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  groc-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: groc-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/GrocDB
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 0306
+      SPRING_PROFILES_ACTIVE: prod
+      CATEGORIZE_SERVICE_HOST: http://groc-categorize:8000
+    ports:
+      - "8080:8080"
+    networks:
+      - groc
+    depends_on:
+      postgres:
+        condition: service_healthy
+      groc-categorize:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  groc-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: groc-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - groc
+    depends_on:
+      groc-backend:
+        condition: service_healthy
+
+networks:
+  groc:
+    driver: bridge
+
+volumes:
+  postgres_data:
